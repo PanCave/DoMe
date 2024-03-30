@@ -77,9 +77,15 @@ class _HomeScreenState extends State<HomeScreen> {
     prefs.setString('agenda', jsonString);
   }
 
-  void _addTodoToAgenda(String title, String description) {
+  void _addTodoToAgenda(String title, String description, DateTime dueDate) {
     setState(() {
-      agenda.agenda.add(Todo(title: title, description: description));
+      agenda.agenda.add(
+        Todo(
+          title: title, 
+          description: description,
+          dueDate: dueDate
+        ),
+      );
     });
     _saveAgenda();
   }
@@ -99,8 +105,8 @@ class _HomeScreenState extends State<HomeScreen> {
       context: context,
       builder: (BuildContext context) {
         return EditTodoDialog(
-          onTodoEdited: (title, description) {
-            _addTodoToAgenda(title, description);
+          onTodoEdited: (title, description, dueDate) {
+            _addTodoToAgenda(title, description, dueDate);
           },
           editButtonText: 'Hinzufügen',
         );
