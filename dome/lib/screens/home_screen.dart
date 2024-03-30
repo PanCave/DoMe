@@ -59,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     } catch (e) {
       // ignore: avoid_print
-      print("Ein Fehler ist aufgetrete: $e");
+      print("Ein Fehler ist aufgetreten: $e");
       await _showErrorDialog();
       agenda = Agenda(agenda: []);
     }
