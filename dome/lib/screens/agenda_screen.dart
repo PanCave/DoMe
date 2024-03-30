@@ -48,10 +48,11 @@ class AgendaScreenState extends State<AgendaScreen> {
     prefs.setString('agenda', jsonString);
   }
 
-  void _editTodo(String title, String description, int todoIndex) {
+  void _editTodo(String title, String description, DateTime dueDate, int todoIndex) {
     setState(() {
       widget.agenda.agenda[todoIndex].title = title;
       widget.agenda.agenda[todoIndex].description = description;
+      widget.agenda.agenda[todoIndex].dueDate = dueDate;
     });
     _saveAgenda();
   }
@@ -61,12 +62,13 @@ class AgendaScreenState extends State<AgendaScreen> {
       context: context,
       builder: (BuildContext context) {
         return EditTodoDialog(
-          onTodoEdited: (title, description) {
-            _editTodo(title, description, todoIndex);
+          onTodoEdited: (title, description, dueDate) {
+            _editTodo(title, description, dueDate, todoIndex);
           },
           editButtonText: 'Aktualisieren',
           title: widget.agenda.agenda[todoIndex].title,
           description: widget.agenda.agenda[todoIndex].description,
+          dueDate: widget.agenda.agenda[todoIndex].dueDate,
         );
       });
   }
