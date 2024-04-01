@@ -44,15 +44,19 @@ class AgendaScreenState extends State<AgendaScreen> {
                 trailing: Checkbox(
                   value: widget.agenda.agenda[index].isDone,
                   onChanged: (bool? value) {
-                    setState(() {
-                      widget.agenda.agenda[index].isDone = value ?? false;
-                    });
-                    _saveAgenda();
+                    _markTodoAsDone(index, value);
                   },
                 ),
               )
             );
           });
+  }
+
+  void _markTodoAsDone(int index, bool? value) {
+    setState(() {
+      widget.agenda.agenda[index].isDone = value ?? false;
+    });
+    _saveAgenda();
   }
 
   void _deleteTodo(BuildContext context,int index) {
