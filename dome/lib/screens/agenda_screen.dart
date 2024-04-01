@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:dome/models/agenda.dart';
+import 'package:dome/models/todo.dart';
 import 'package:dome/screens/edit_todo_dialog.dart';
 
 class AgendaScreen extends StatefulWidget {
@@ -23,23 +24,65 @@ class AgendaScreenState extends State<AgendaScreen> {
     return ListView.builder(
           itemCount: widget.agenda.agenda.length,
           itemBuilder: (BuildContext context, int index) {
-            return ListTile(
-              onTap: () {
-                _showEditTodoDialog(index);
+            return Dismissible(
+              onDismissed: (direction) {
+                _deleteTodo(context, index);
               },
-              title: Text(widget.agenda.agenda[index].title),
-              subtitle: Text(widget.agenda.agenda[index].description),
-              trailing: Checkbox(
-                value: widget.agenda.agenda[index].isDone,
-                onChanged: (bool? value) {
-                  setState(() {
-                    widget.agenda.agenda[index].isDone = value ?? false;
-                  });
-                  _saveAgenda();
-                },
+              key: Key(widget.agenda.agenda[index].title),
+              background: Container(
+                color: Colors.red,
+                child: const Center(
+                  child: Icon(Icons.delete),
+                  ),
               ),
+              child: ListTile(
+                onTap: () {
+                  _showEditTodoDialog(index);
+                },
+                title: Text(widget.agenda.agenda[index].title),
+                subtitle: Text(widget.agenda.agenda[index].description),
+                trailing: Checkbox(
+                  value: widget.agenda.agenda[index].isDone,
+                  onChanged: (bool? value) {
+                    _markTodoAsDone(index, value);
+                  },
+                ),
+              )
             );
           });
+  }
+
+  void _markTodoAsDone(int index, bool? value) {
+    setState(() {
+      widget.agenda.agenda[index].isDone = value ?? false;
+    });
+    _saveAgenda();
+  }
+
+  void _deleteTodo(BuildContext context,int index) {
+    final Todo toBeRemovedTodo = widget.agenda.agenda[index];
+    final String toBeRemovedTodoTitle = toBeRemovedTodo.title;
+    final snackBar = SnackBar(
+      content: Text('Aufgabe gelöscht: \'$toBeRemovedTodoTitle\''),
+      action: SnackBarAction(
+        label: 'Rückgängig',
+        onPressed: () {
+          _restoreTodo(index, toBeRemovedTodo);
+        },
+      ),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    setState(() {
+      widget.agenda.agenda.removeAt(index);
+    });
+    _saveAgenda();
+  }
+
+  void _restoreTodo(int index, Todo toBeRemovedTodo) {
+    setState(() {
+      widget.agenda.agenda.insert(index, toBeRemovedTodo);
+    });
+    _saveAgenda();
   }
 
   Future<void> _saveAgenda() async {
