@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:dome/models/agenda.dart';
+import 'package:dome/models/todo.dart';
 import 'package:dome/screens/edit_todo_dialog.dart';
 
 class AgendaScreen extends StatefulWidget {
@@ -52,8 +53,19 @@ class AgendaScreenState extends State<AgendaScreen> {
   }
 
   void _deleteTodo(BuildContext context,int index) {
-    final String removedTodoTitle = widget.agenda.agenda[index].title;
-    final snackBar = SnackBar(content: Text('Aufgabe gelöscht: \'$removedTodoTitle\''));
+    final Todo toBeRemovedTodo = widget.agenda.agenda[index];
+    final String toBeRemovedTodoTitle = toBeRemovedTodo.title;
+    final snackBar = SnackBar(
+      content: Text('Aufgabe gelöscht: \'$toBeRemovedTodoTitle\''),
+      action: SnackBarAction(
+        label: 'Rückgängig',
+        onPressed: () {
+          setState(() {
+            widget.agenda.agenda.insert(index, toBeRemovedTodo);
+          });
+        },
+      ),
+      );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
     setState(() {
       widget.agenda.agenda.removeAt(index);
