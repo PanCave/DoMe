@@ -28,7 +28,7 @@ class _EditTodoDialogState extends State<EditTodoDialog> {
 
   @override
   void initState() {
-    dateController.text = DateFormat('dd. MMMM yyyy', 'de_DE').format(widget.dueDate);;
+    dateController.text = DateFormat('dd. MMMM yyyy', 'de_DE').format(widget.dueDate);
     super.initState();
   }
 
