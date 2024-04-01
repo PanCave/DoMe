@@ -23,23 +23,42 @@ class AgendaScreenState extends State<AgendaScreen> {
     return ListView.builder(
           itemCount: widget.agenda.agenda.length,
           itemBuilder: (BuildContext context, int index) {
-            return ListTile(
-              onTap: () {
-                _showEditTodoDialog(index);
+            return Dismissible(
+              onDismissed: (direction) {
+                _deleteTodo(context, index);
               },
-              title: Text(widget.agenda.agenda[index].title),
-              subtitle: Text(widget.agenda.agenda[index].description),
-              trailing: Checkbox(
-                value: widget.agenda.agenda[index].isDone,
-                onChanged: (bool? value) {
-                  setState(() {
-                    widget.agenda.agenda[index].isDone = value ?? false;
-                  });
-                  _saveAgenda();
-                },
+              key: Key(widget.agenda.agenda[index].title),
+              background: Container(
+                color: Colors.red,
               ),
+              child: ListTile(
+                onTap: () {
+                  _showEditTodoDialog(index);
+                },
+                title: Text(widget.agenda.agenda[index].title),
+                subtitle: Text(widget.agenda.agenda[index].description),
+                trailing: Checkbox(
+                  value: widget.agenda.agenda[index].isDone,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      widget.agenda.agenda[index].isDone = value ?? false;
+                    });
+                    _saveAgenda();
+                  },
+                ),
+              )
             );
           });
+  }
+
+  void _deleteTodo(BuildContext context,int index) {
+    final String removedTodoTitle = widget.agenda.agenda[index].title;
+    final snackBar = SnackBar(content: Text('Aufgabe gelöscht: \'$removedTodoTitle\''));
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    setState(() {
+      widget.agenda.agenda.removeAt(index);
+    });
+    _saveAgenda();
   }
 
   Future<void> _saveAgenda() async {
