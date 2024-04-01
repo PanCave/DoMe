@@ -67,15 +67,20 @@ class AgendaScreenState extends State<AgendaScreen> {
       action: SnackBarAction(
         label: 'Rückgängig',
         onPressed: () {
-          setState(() {
-            widget.agenda.agenda.insert(index, toBeRemovedTodo);
-          });
+          _restoreTodo(index, toBeRemovedTodo);
         },
       ),
-      );
+    );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
     setState(() {
       widget.agenda.agenda.removeAt(index);
+    });
+    _saveAgenda();
+  }
+
+  void _restoreTodo(int index, Todo toBeRemovedTodo) {
+    setState(() {
+      widget.agenda.agenda.insert(index, toBeRemovedTodo);
     });
     _saveAgenda();
   }
