@@ -31,6 +31,9 @@ class AgendaScreenState extends State<AgendaScreen> {
               key: Key(widget.agenda.agenda[index].title),
               background: Container(
                 color: Colors.red,
+                child: const Center(
+                  child: Icon(Icons.delete),
+                  ),
               ),
               child: ListTile(
                 onTap: () {
