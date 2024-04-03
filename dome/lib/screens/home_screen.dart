@@ -56,6 +56,8 @@ class _HomeScreenState extends State<HomeScreen> {
         // agenda = Agenda(agenda: []);
         final jsonMap = json.decode(jsonString);
         agenda = Agenda.fromJson(jsonMap);
+        agenda.agenda.sort((a, b) => a.dueDate.compareTo(b.dueDate),
+        );
       }
     } catch (e) {
       // ignore: avoid_print
@@ -86,6 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
           dueDate: dueDate
         ),
       );
+      agenda.agenda.sort((a, b) => a.dueDate.compareTo(b.dueDate),);
     });
     _saveAgenda();
   }

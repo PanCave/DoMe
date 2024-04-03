@@ -96,6 +96,9 @@ class AgendaScreenState extends State<AgendaScreen> {
       widget.agenda.agenda[todoIndex].title = title;
       widget.agenda.agenda[todoIndex].description = description;
       widget.agenda.agenda[todoIndex].dueDate = dueDate;
+      widget.agenda.agenda.sort(
+        (a, b) => a.dueDate.compareTo(b.dueDate)
+      );
     });
     _saveAgenda();
   }
